@@ -1,0 +1,99 @@
+-- 1. Покажите фамилию и имя клиентов из города Прага
+SELECT LastName, FirstName
+  FROM customers
+ WHERE City = 'Prague';
+
+-- 2. Покажите фамилию и имя клиентов у которых имя начинается букву M и содержит символы "ch"
+SELECT LastName, FirstName
+  FROM customers
+ WHERE (FirstName LIKE 'M%' AND 
+        FirstName LIKE '%ch%');
+
+ -- 3. Покажите название и размер музыкальных треков в Мегабайтах
+ SELECT Name AS [Track name],
+       Bytes / 1024 / 1024 AS Megabytes
+  FROM tracks;
+
+-- 4. Покажите фамилию и имя сотрудников кампании нанятых в 2002 году из города Калгари
+SELECT LastName, FirstName
+  FROM employees
+ WHERE (HireDate >= date('2002-01-01') AND 
+        HireDate < date('2003-01-01') AND 
+        City LIKE 'Calgary');
+
+-- 5. Покажите фамилию и имя сотрудников кампании нанятых в возрасте 40 лет и выше
+SELECT LastName, FirstName
+  FROM employees
+ WHERE (HireDate - BirthDate >= 40);
+
+-- 6. Покажите покупателей-амерканцев без факса
+SELECT LastName, FirstName
+  FROM customers
+ WHERE Country LIKE 'USA' AND 
+       Fax IS NOT NULL;
+
+-- 7. Покажите канадские города в которые сделаны продажи в августе и сентябре месяце
+ SELECT ShipCity
+  FROM sales
+ WHERE (strftime('%m', SalesDate) = '08' OR 
+        strftime('%m', SalesDate) = '09') AND 
+       ShipCountry LIKE 'Canada';
+
+-- 8. Покажите почтовые адреса клиентов из домена gmail.com
+SELECT Email
+  FROM customers
+ WHERE Email LIKE '%@gmail.com';
+
+-- 9. Покажите сотрудников, которые работают в кампании уже 21 год и более
+SELECT LastName, FirstName
+  FROM employees
+ WHERE datetime('now') - HireDate >= 21;
+
+-- 10. Покажите в алфавитном порядке все должности в кампании
+SELECT Title
+  FROM employees
+ ORDER BY Title ASC;
+
+-- 11. Покажите в алфавитном порядке Фамилию, Имя и год рождения покупателей
+SELECT LastName,
+       FirstName,
+       datetime('now') - Age AS [Year of birth]
+  FROM customers
+ ORDER BY LastName ASC,
+          FirstName ASC;
+
+-- 12. Сколько секунд длится самая короткая песня
+SELECT Milliseconds / 1000 AS Second
+  FROM tracks
+ ORDER BY Second ASC
+ LIMIT 1;
+
+-- 13. Покажите название и длительность в секундах самой короткой песни
+  -- I. Limit
+SELECT Name,
+       Milliseconds / 1000 AS Second
+  FROM tracks
+ ORDER BY Second ASC
+ LIMIT 1;
+  -- II. Min
+SELECT Name,
+       min(Milliseconds / 1000) AS Second
+  FROM tracks;
+
+-- 14. Покажите средний возраст клиента для каждой страны
+SELECT Country,
+       avg(Age) AS Ages
+  FROM customers
+ GROUP BY Country;
+
+-- 15. Покажите Фамилии работников нанятых в октябре
+SELECT LastName
+  FROM employees
+ WHERE strftime('%m', HireDate) = '10';
+
+-- 16. Покажите фамилию самого старого по стажу сотрудника в кампании
+SELECT LastName
+  FROM employees
+ ORDER BY BirthDate ASC
+ LIMIT 1;
+
